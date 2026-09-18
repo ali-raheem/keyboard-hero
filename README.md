@@ -14,6 +14,27 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 - **Space** (or Enter / arrow up / arrow down) — strum when the gem reaches the line
 - **Esc** — pause
 
+### Playing your own music
+
+Pick **Your music** on the menu and choose an MP3, OGG, WAV, M4A or FLAC file. The file is decoded and analysed in the
+browser and never uploaded. The game listens for the track's tempo, beats and hits, then builds a chart:
+
+- Onsets come from spectral flux in four frequency bands. Tempo is picked by autocorrelation with a prior around 120 bpm,
+  and beats are placed with a dynamic-programming tracker so slight tempo drift is followed.
+- Hits are snapped to sixteenths of the tracked beat. Difficulty decides which grid positions and how strong a hit must be
+  to become a gem, with a minimum spacing per level.
+- The lane comes from which band jumped most relative to its usual level, so kicks tend to sit left and cymbals right.
+  Very strong hits on Medium and above can become chords, and gems whose sound rings through the following gap can become sustains.
+- Hits play a quiet pick, and misses dip the track for a moment in place of the muted guitar stem the real game has.
+
+Percussive music charts best. Quiet or heavily reverbed tracks produce sparse charts, and the menu warns when few hits were found.
+Best scores are only kept for generated songs, since every loaded track is different.
+
+### Timing offset
+
+Set a **timing offset** in milliseconds on the menu to absorb your keyboard and audio latency. If your hits keep landing late,
+raise it. The results screen reports your average timing error and suggests an offset when it is worth changing.
+
 Chords need every shown fret held and nothing else. Single notes allow "anchoring": you may keep lower frets held, but no higher one.
 Strumming with no gem in the window is an overstrum and breaks your combo, as in the real game.
 
@@ -30,7 +51,7 @@ Extra frets pressed during a sustain do not hurt.
 
 ## Songs
 
-Charts and backing tracks are generated from the seed text plus the difficulty, so the same seed always gives the same song.
+Generated charts and backing tracks come from the seed text plus the difficulty, so the same seed always gives the same song.
 Audio is synthesized with the Web Audio API: distorted guitar tones on each hit, plus a drum and bass backing.
 
 | Difficulty | Lanes | Density | Chords | Sustains | Scroll time |
