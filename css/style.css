@@ -1,0 +1,194 @@
+/* Fonts are bundled (Latin subset, SIL OFL; licences in fonts/) so the game works offline. */
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 400; font-display: swap; src: url('../fonts/barlow-400.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 500; font-display: swap; src: url('../fonts/barlow-500.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 600; font-display: swap; src: url('../fonts/barlow-600.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow'; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/barlow-700.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 600; font-display: swap; src: url('../fonts/barlow-condensed-600.woff2') format('woff2'); }
+@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 700; font-display: swap; src: url('../fonts/barlow-condensed-700.woff2') format('woff2'); }
+@font-face { font-family: 'Bungee'; font-style: normal; font-weight: 400; font-display: swap; src: url('../fonts/bungee-400.woff2') format('woff2'); }
+
+:root {
+  --bg: #0b0a10;
+  --bg-2: #15131d;
+  --panel: #1b1826;
+  --line: #2b2738;
+  --ink: #f2eee6;
+  --ink-mute: #8d8798;
+  --accent: #ffb347;
+  --accent-ink: #1a1206;
+  --lane-a: #37d67a;
+  --lane-s: #ff5252;
+  --lane-d: #ffd23f;
+  --lane-f: #4aa3ff;
+  --good: #37d67a;
+  --warn: #ffd23f;
+  --bad: #ff5252;
+  --display: "Bungee", "Impact", "Arial Black", sans-serif;
+  --body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --cond: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.45;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+#app { position: relative; height: 100%; }
+.screen { position: absolute; inset: 0; }
+
+/* ---------- Menu & results panels ---------- */
+.panel-screen {
+  /* Centred by the panel's auto margins, not align-items: centring with align-items
+     pushes an over-tall panel's top out of reach on short windows. */
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(255,179,71,0.22), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(74,163,255,0.12), transparent 70%),
+    var(--bg);
+}
+.panel {
+  width: 100%; max-width: 560px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 28px 24px 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.eyebrow {
+  font-family: var(--cond); font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.18em; font-size: 12px; color: var(--accent); margin: 0 0 6px;
+}
+h1 {
+  font-family: var(--display); font-weight: 400; font-size: clamp(34px, 8vw, 52px);
+  line-height: 1; margin: 0 0 14px; text-wrap: balance; letter-spacing: 0.01em;
+}
+h1 .hero { color: var(--accent); }
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 6vw, 36px); line-height: 1.05; margin: 0 0 8px; }
+p { margin: 0 0 12px; max-width: 60ch; }
+.mute { color: var(--ink-mute); }
+
+.keyrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 6px 0 18px; }
+.keycap {
+  display: inline-grid; place-items: center;
+  min-width: 46px; height: 46px; padding: 0 12px;
+  border-radius: 6px;
+  font-family: var(--cond); font-weight: 700; font-size: 20px;
+  color: #0b0a10;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.35), 0 2px 0 rgba(0,0,0,0.5);
+}
+.keycap.a { background: var(--lane-a); }
+.keycap.s { background: var(--lane-s); }
+.keycap.d { background: var(--lane-d); }
+.keycap.f { background: var(--lane-f); }
+.keycap.space { background: var(--ink); min-width: 140px; letter-spacing: 0.12em; }
+.keyrow .plus { font-family: var(--cond); font-weight: 700; color: var(--ink-mute); font-size: 20px; }
+
+.field { margin-bottom: 16px; }
+.field label, .field .label {
+  display: block; font-family: var(--cond); font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.14em; font-size: 12px; color: var(--ink-mute); margin-bottom: 8px;
+}
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.seg button {
+  background: var(--bg-2); color: var(--ink); border: 1px solid var(--line);
+  border-radius: 4px; padding: 10px 6px;
+  font-family: var(--cond); font-weight: 700; font-size: 17px; text-transform: uppercase; letter-spacing: 0.06em;
+}
+.seg.two { grid-template-columns: repeat(2, 1fr); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.seedrow { display: flex; gap: 6px; }
+.seedrow input {
+  flex: 1; min-width: 0;
+  background: var(--bg-2); color: var(--ink); border: 1px solid var(--line); border-radius: 4px;
+  padding: 10px 12px; font-family: var(--body); font-size: 16px;
+}
+.btn {
+  background: var(--bg-2); color: var(--ink); border: 1px solid var(--line);
+  border-radius: 4px; padding: 10px 16px;
+  font-family: var(--cond); font-weight: 700; font-size: 17px; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.btn:hover { border-color: var(--ink-mute); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn:disabled:hover { border-color: var(--line); filter: none; }
+.inline-note { align-self: center; font-size: 14px; }
+.seedrow input[type="number"] { flex: 0 0 110px; }
+.btn.primary {
+  background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+  font-family: var(--display); font-size: 20px; letter-spacing: 0.02em; text-transform: none;
+  padding: 14px 22px; width: 100%; margin-top: 6px;
+}
+.btn.primary:hover { filter: brightness(1.06); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+.actions .btn { flex: 1; }
+.best { margin-top: 12px; font-family: var(--cond); font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-mute); }
+.best b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* ---------- Results ---------- */
+.stars { font-size: 30px; letter-spacing: 4px; color: var(--accent); margin-bottom: 6px; line-height: 1; }
+.stars .off { color: var(--line); }
+.bigscore { font-family: var(--display); font-size: clamp(40px, 10vw, 64px); line-height: 1; margin: 6px 0 16px; font-variant-numeric: tabular-nums; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stat { background: var(--bg-2); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; }
+.stat .k { font-family: var(--cond); text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; color: var(--ink-mute); }
+.stat .v { font-family: var(--cond); font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+@media (max-width: 460px) { .stats { grid-template-columns: repeat(2, 1fr); } .seg { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- Game ---------- */
+#game { background: var(--bg); }
+#highway { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hud { position: absolute; pointer-events: none; font-family: var(--cond); }
+.hud .k { text-transform: uppercase; letter-spacing: 0.16em; font-size: 12px; color: var(--ink-mute); font-weight: 600; }
+#hud-score { top: calc(14px + env(safe-area-inset-top, 0px)); left: 16px; }
+#score { font-family: var(--display); font-size: clamp(26px, 5vw, 40px); line-height: 1; font-variant-numeric: tabular-nums; }
+#hud-combo { top: calc(14px + env(safe-area-inset-top, 0px)); right: 16px; text-align: right; }
+#mult {
+  display: inline-block; font-family: var(--display); font-size: clamp(22px, 4.5vw, 34px); line-height: 1;
+  padding: 4px 10px; border-radius: 4px; background: var(--bg-2); border: 1px solid var(--line);
+  transition: background 120ms, color 120ms, transform 120ms;
+}
+#mult.m2 { background: var(--lane-d); color: #0b0a10; border-color: var(--lane-d); }
+#mult.m3 { background: var(--lane-f); color: #0b0a10; border-color: var(--lane-f); }
+#mult.m4 { background: var(--accent); color: #0b0a10; border-color: var(--accent); }
+#mult.pop { transform: scale(1.18); }
+#combo { font-weight: 700; font-size: 20px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+#hud-rock { left: 16px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+#rock { width: 18px; height: 140px; border-radius: 9px; background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column-reverse; }
+#rock-fill { width: 100%; height: 50%; background: var(--warn); transition: height 150ms linear, background 200ms; }
+#hud-prog { left: 0; right: 0; bottom: 0; height: 4px; background: var(--bg-2); padding-bottom: env(safe-area-inset-bottom, 0px); }
+#prog-fill { height: 100%; width: 0%; background: var(--accent); }
+
+#hud-hint {
+  left: 50%; transform: translateX(-50%); bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  text-transform: uppercase; letter-spacing: 0.18em; font-size: 12px; color: var(--ink-mute); white-space: nowrap;
+}
+#hud-hint kbd { font-family: var(--cond); border: 1px solid var(--line); border-radius: 3px; padding: 1px 6px; color: var(--ink); }
+
+#overlay {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  background: rgba(11,10,16,0.72); backdrop-filter: blur(3px);
+}
+#overlay .card { text-align: center; padding: 24px; }
+#overlay h2 { margin-bottom: 4px; }
+#overlay .actions { justify-content: center; }
+#overlay .actions .btn { flex: 0 1 auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  #mult { transition: none; }
+  #rock-fill { transition: none; }
+}
+.panel-screen > .panel { margin: auto 0; }
+.version { font-size: 12px; margin: 6px 0 0; }

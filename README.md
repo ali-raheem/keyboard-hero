@@ -1,14 +1,25 @@
 # Keyboard Hero
 
-A Guitar Hero–style rhythm game for the keyboard. Single HTML file, no build step, no assets.
+[![CI](https://github.com/ali-raheem/keyboard-hero/actions/workflows/ci.yml/badge.svg)](https://github.com/ali-raheem/keyboard-hero/actions/workflows/ci.yml) [![GitHub Pages](https://github.com/ali-raheem/keyboard-hero/actions/workflows/pages.yml/badge.svg)](https://github.com/ali-raheem/keyboard-hero/actions/workflows/pages.yml)
 
-## Play
+**▶ Try it live: [shoryuken.me/kh](https://shoryuken.me/kh/)** · mirror on [GitHub Pages](https://ali-raheem.github.io/keyboard-hero/) · installable, works offline
 
-Open `index.html` in a browser (or serve the folder with any static server):
+<p align="center">
+  <a href="https://shoryuken.me/kh/"><img src="docs/screenshots/desktop.webp" alt="Keyboard Hero on a desktop browser" width="74%"></a>
+  <a href="https://shoryuken.me/kh/"><img src="docs/screenshots/mobile.webp" alt="Keyboard Hero on a phone" width="22%"></a>
+</p>
+
+A Guitar Hero–style rhythm game for the keyboard. Plain ES modules with no build step and no dependencies, installable, and it works offline: generated songs are synthesised on the fly and your own tracks are analysed in the browser.
+
+## Run it
+
+Serve the folder over HTTP (ES modules and the service worker don't load from `file://`):
 
 ```bash
-python3 -m http.server 8000   # then visit http://localhost:8000
+npm run serve   # python3 -m http.server 8080, then visit http://localhost:8080/
 ```
+
+## Play
 
 - **A S D F** — hold the fret(s) shown on the falling gems
 - **Space** (or Enter / arrow up / arrow down) — strum when the gem reaches the line
@@ -65,3 +76,31 @@ A sustain only appears where there is at least half a beat of rest before the ne
 The final chord of every song is a four-beat hold.
 
 Best scores per difficulty are kept in `localStorage`.
+
+## Structure
+
+| File | Role |
+|---|---|
+| `js/song.js` | Seeded RNG, game constants and the procedural chart and backing generator. DOM-free. |
+| `js/analysis.js` | Charting your own track: FFT, spectral-flux onsets, tempo, beat tracking and the chart builder. DOM-free. |
+| `js/app.js` | Web Audio synth, game loop, judging, the canvas highway, menus and input. |
+| `js/version.js` | `VERSION` and `BUILT`, shown under the menu. |
+| `sw.js` | Offline cache for the app's own files. |
+| `fonts/` | Bundled Bungee, Barlow and Barlow Condensed (Latin subset) with their licences. |
+
+## Releasing
+
+```bash
+npm test
+npm run bump    # patch; or: npm run bump -- minor | major
+```
+
+The service worker cache is keyed on `VERSION`, so bumping it moves installed copies onto a fresh cache.
+
+## Tests
+
+`npm test` runs the Node test runner over `tests/`: chart determinism and shape for every difficulty, the analysis pipeline on a synthetic click track, and checks that the service worker caches every shipped file and stays inside its own scope and caches.
+
+## Licence
+
+[MIT](LICENSE) © 2026 Ali Raheem. The bundled fonts in `fonts/` (Bungee, Barlow and Barlow Condensed) are under the SIL Open Font License 1.1; see their licences in that folder.

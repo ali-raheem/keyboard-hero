@@ -1,0 +1,14 @@
+{
+  "name": "keyboard-hero",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A home-row rhythm game: play a generated song, or load your own track and the game charts it for you.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "serve": "python3 -m http.server 8080",
+    "bump": "node scripts/bump.mjs",
+    "icons": "python3 scripts/make_icons.py"
+  }
+}
